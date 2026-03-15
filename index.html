@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UAV Imagery Labeling: Solutions and Challenges</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ─── TOP NAV ─────────────────────────────────────────────── -->
+  <nav class="topnav" id="topnav">
+    <div class="nav-inner">
+      <span class="nav-logo">Kuwait University &mdash; CS Seminar</span>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#abstract">Abstract</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#solutions">Solutions</a></li>
+        <li><a href="#datasets">Datasets</a></li>
+        <li><a href="#models">Models</a></li>
+        <li><a href="#future">Future</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#references">References</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="badge">Seminar Proposal &middot; March 2026</div>
+      <h1 class="hero-title">UAV Imagery Labeling</h1>
+      <p class="hero-subtitle">Solutions and Challenges</p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Author</span>
+          <span class="meta-value">Abeer Alsafran</span>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <span class="meta-label">Supervisor</span>
+          <span class="meta-value">Dr. Noura Aljeri</span>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <span class="meta-label">Department</span>
+          <span class="meta-value">Computer Science, College of Science</span>
+        </div>
+      </div>
+      <a href="#abstract" class="hero-cta">Read Proposal ↓</a>
+    </div>
+
+    <div class="drone-visual">
+      <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" class="drone-svg">
+        <!-- drone body -->
+        <rect x="82" y="68" width="36" height="24" rx="8" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
+        <circle cx="100" cy="80" r="8" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        <!-- arms -->
+        <line x1="82" y1="72" x2="48" y2="48" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+        <line x1="118" y1="72" x2="152" y2="48" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+        <line x1="82" y1="88" x2="48" y2="112" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+        <line x1="118" y1="88" x2="152" y2="112" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+        <!-- rotors -->
+        <ellipse cx="48" cy="44" rx="22" ry="6" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+        <ellipse cx="152" cy="44" rx="22" ry="6" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+        <ellipse cx="48" cy="116" rx="22" ry="6" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+        <ellipse cx="152" cy="116" rx="22" ry="6" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+        <!-- camera -->
+        <rect x="93" y="88" width="14" height="10" rx="3" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+        <circle cx="100" cy="93" r="3" fill="rgba(255,255,255,0.3)"/>
+        <!-- scan lines (aerial view effect) -->
+        <line x1="60" y1="135" x2="140" y2="135" stroke="rgba(99,179,237,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="55" y1="142" x2="145" y2="142" stroke="rgba(99,179,237,0.2)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="50" y1="149" x2="150" y2="149" stroke="rgba(99,179,237,0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ──────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ABSTRACT -->
+    <section class="section" id="abstract">
+      <div class="section-inner">
+        <div class="section-label">Abstract</div>
+        <h2 class="section-title">Overview</h2>
+        <div class="abstract-card">
+          <p>
+            Unmanned Aerial Vehicles (UAVs) have become essential tools across surveillance, healthcare,
+            security, and commercial sectors. However, the unique characteristics of UAV imagery — such as
+            <strong>bird's-eye perspectives</strong>, <strong>varying resolutions</strong>, and
+            <strong>small object sizes</strong> — pose significant challenges for accurate labeling and object detection.
+          </p>
+          <p>
+            While manual annotation is precise, it is impractical for large-scale applications. Existing automated
+            labeling tools and detection models, primarily trained on ground-level imagery, struggle to generalize
+            to aerial contexts, particularly for small objects in cluttered backgrounds.
+          </p>
+        </div>
+
+        <!-- Challenge Pills -->
+        <div class="challenge-grid">
+          <div class="challenge-pill">
+            <span class="pill-icon">🦅</span>
+            <span class="pill-text">Eagle-eye perspective</span>
+          </div>
+          <div class="challenge-pill">
+            <span class="pill-icon">🔍</span>
+            <span class="pill-text">Small object detection</span>
+          </div>
+          <div class="challenge-pill">
+            <span class="pill-icon">🌫️</span>
+            <span class="pill-text">Cluttered backgrounds</span>
+          </div>
+          <div class="challenge-pill">
+            <span class="pill-icon">📏</span>
+            <span class="pill-text">Variable resolution &amp; altitude</span>
+          </div>
+          <div class="challenge-pill">
+            <span class="pill-icon">🏷️</span>
+            <span class="pill-text">Costly manual annotation</span>
+          </div>
+          <div class="challenge-pill">
+            <span class="pill-icon">🤖</span>
+            <span class="pill-text">Domain generalization gap</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OVERVIEW -->
+    <section class="section section-alt" id="overview">
+      <div class="section-inner">
+        <div class="section-label">Section 1.1</div>
+        <h2 class="section-title">UAV Imagery: Overview</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <p>
+              Unmanned Aerial Vehicles (UAVs) have emerged as a critical technology across different domains,
+              including surveillance, healthcare, security, and commercial applications <a href="#ref12" class="cite">[12]</a>.
+              The imagery captured by UAVs serves as an essential data source; however, UAV imagery is known for
+              its unique eagle-view characteristics.
+            </p>
+            <p>
+              Resolution, altitude, and field of view introduce challenging variability. Among these challenges,
+              one of the major concerns lies in <strong>object detection</strong> and accurate image labeling.
+              Many current studies focus on detecting pre-labeled datasets and using pre-trained models; however,
+              these approaches struggle to generalize effectively.
+            </p>
+            <p>
+              Issues such as <em>low resolution</em>, <em>small-scale targets</em>, and
+              <em>cluttered or complex backgrounds</em> degrade detection accuracy and often require costly model
+              retraining. Because UAV imagery typically provides an eagle-eye view, models trained on non-UAV datasets
+              face significant challenges detecting small objects.
+            </p>
+          </div>
+          <div class="col-visual">
+            <div class="info-box">
+              <h4>Key Challenges</h4>
+              <ul class="challenge-list">
+                <li>
+                  <span class="tag tag-red">Hard</span>
+                  Low resolution &amp; small targets
+                </li>
+                <li>
+                  <span class="tag tag-orange">Hard</span>
+                  Cluttered &amp; complex backgrounds
+                </li>
+                <li>
+                  <span class="tag tag-orange">Hard</span>
+                  Domain shift (ground → aerial)
+                </li>
+                <li>
+                  <span class="tag tag-yellow">Medium</span>
+                  Variable altitude &amp; field of view
+                </li>
+                <li>
+                  <span class="tag tag-yellow">Medium</span>
+                  Costly model retraining
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATASETS -->
+    <section class="section" id="datasets">
+      <div class="section-inner">
+        <div class="section-label">Section 1.2 — Part A</div>
+        <h2 class="section-title">Major UAV Datasets</h2>
+        <p class="section-intro">
+          In supervised machine learning, labeling is essential to train any model. Several benchmark datasets
+          have been captured by UAV platforms, each with distinct characteristics and purposes.
+        </p>
+        <div class="dataset-grid">
+
+          <div class="dataset-card">
+            <div class="dataset-header">
+              <span class="dataset-name">UAVDT</span>
+              <span class="ds-badge">Object Detection &amp; Tracking</span>
+            </div>
+            <div class="dataset-body">
+              <p>Benchmark for UAV object detection and tracking.</p>
+              <div class="ds-stats">
+                <div class="ds-stat"><strong>4</strong><span>Classes</span></div>
+                <div class="ds-stat"><strong>Very Small</strong><span>Object Size</span></div>
+              </div>
+            </div>
+            <div class="dataset-cite">Ref. <a href="#ref1" class="cite">[1]</a></div>
+          </div>
+
+          <div class="dataset-card">
+            <div class="dataset-header">
+              <span class="dataset-name">AI-TOD</span>
+              <span class="ds-badge">Tiny Object Detection</span>
+            </div>
+            <div class="dataset-body">
+              <p>Specialized for detecting tiny objects in aerial imagery.</p>
+              <div class="ds-stats">
+                <div class="ds-stat"><strong>8</strong><span>Categories</span></div>
+                <div class="ds-stat"><strong>Tiny</strong><span>Object Size</span></div>
+              </div>
+            </div>
+            <div class="dataset-cite">Ref. <a href="#ref2" class="cite">[2]</a></div>
+          </div>
+
+          <div class="dataset-card featured">
+            <div class="dataset-header">
+              <span class="dataset-name">VisDrone</span>
+              <span class="ds-badge popular">Most Popular</span>
+            </div>
+            <div class="dataset-body">
+              <p>Known for small and tiny objects; a leading benchmark in drone vision research.</p>
+              <div class="ds-stats">
+                <div class="ds-stat"><strong>10</strong><span>Classes</span></div>
+                <div class="ds-stat"><strong>Small/Tiny</strong><span>Object Size</span></div>
+              </div>
+            </div>
+            <div class="dataset-cite">Ref. <a href="#ref3" class="cite">[3]</a></div>
+          </div>
+
+          <div class="dataset-card">
+            <div class="dataset-header">
+              <span class="dataset-name">DIOR</span>
+              <span class="ds-badge">Remote Sensing</span>
+            </div>
+            <div class="dataset-body">
+              <p>Large-scale remote sensing dataset with richly diverse categories.</p>
+              <div class="ds-stats">
+                <div class="ds-stat"><strong>190</strong><span>Categories</span></div>
+                <div class="ds-stat"><strong>Remote</strong><span>Sensing</span></div>
+              </div>
+            </div>
+            <div class="dataset-cite">Ref. <a href="#ref4" class="cite">[4]</a></div>
+          </div>
+
+          <div class="dataset-card">
+            <div class="dataset-header">
+              <span class="dataset-name">EAGLE</span>
+              <span class="ds-badge">Vehicle Detection</span>
+            </div>
+            <div class="dataset-body">
+              <p>Large-scale dataset for vehicle detection in real-world aerial scenarios.</p>
+              <div class="ds-stats">
+                <div class="ds-stat"><strong>2</strong><span>Categories</span></div>
+                <div class="ds-stat"><strong>Large-Scale</strong><span>Dataset</span></div>
+              </div>
+            </div>
+            <div class="dataset-cite">Ref. <a href="#ref5" class="cite">[5]</a></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MODELS -->
+    <section class="section section-alt" id="models">
+      <div class="section-inner">
+        <div class="section-label">Section 1.2 — Part B</div>
+        <h2 class="section-title">Labeling &amp; Detection Models</h2>
+        <p class="section-intro">
+          Labeling models can be categorized into two primary architectures:
+          <strong>Transformers</strong> and <strong>Convolutional Neural Networks (CNNs)</strong>.
+          Most are pre-trained on non-UAV (ground-level) datasets, creating a domain gap for aerial tasks.
+        </p>
+
+        <div class="arch-tabs">
+          <div class="arch-section">
+            <div class="arch-header transformer-header">
+              <span class="arch-icon">⚡</span>
+              <span class="arch-type">Transformer-based</span>
+            </div>
+            <div class="model-list">
+              <div class="model-card">
+                <div class="model-top">
+                  <span class="model-name">SAM2</span>
+                  <span class="model-tag">Segmentation</span>
+                </div>
+                <p>Mask-based automatic segmentation. Trained on the SA-V dataset using a transformer with point and mask prompts. Pre-trained on non-UAV images.</p>
+                <div class="model-cite">Meta AI, 2023 <a href="#ref8" class="cite">[8]</a></div>
+              </div>
+              <div class="model-card">
+                <div class="model-top">
+                  <span class="model-name">Grounding DINO</span>
+                  <span class="model-tag">Detection</span>
+                </div>
+                <p>Text-prompt-based bounding box generation. Pre-trained on non-UAV datasets.</p>
+                <div class="model-cite">Liu et al., 2023 <a href="#ref7" class="cite">[7]</a></div>
+              </div>
+              <div class="model-card">
+                <div class="model-top">
+                  <span class="model-name">Grounded SAM</span>
+                  <span class="model-tag">Multi-task</span>
+                </div>
+                <p>Combines open-world models for diverse visual tasks (detection + segmentation).</p>
+                <div class="model-cite">Ren et al., 2024 <a href="#ref6" class="cite">[6]</a></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-section">
+            <div class="arch-header cnn-header">
+              <span class="arch-icon">🔲</span>
+              <span class="arch-type">CNN-based</span>
+            </div>
+            <div class="model-list">
+              <div class="model-card">
+                <div class="model-top">
+                  <span class="model-name">YOLO11</span>
+                  <span class="model-tag">Multi-task</span>
+                </div>
+                <p>Detection, Classification, Segmentation, Pose &amp; Oriented detection. Pre-trained on non-UAV data.</p>
+                <div class="model-cite">Jocher &amp; Qiu, 2024 <a href="#ref9" class="cite">[9]</a></div>
+              </div>
+              <div class="model-card">
+                <div class="model-top">
+                  <span class="model-name">DETR</span>
+                  <span class="model-tag">End-to-End</span>
+                </div>
+                <p>End-to-end object detection with Transformers (CNN backbone). Segmentation &amp; detection.</p>
+                <div class="model-cite">Carion et al., 2020 <a href="#ref10" class="cite">[10]</a></div>
+              </div>
+              <div class="model-card">
+                <div class="model-top">
+                  <span class="model-name">Detectron2</span>
+                  <span class="model-tag">Framework</span>
+                </div>
+                <p>Bounding boxes, Segmentation, Dense Pose, Keypoint &amp; Semantic Segmentation. Multi-dataset pre-training.</p>
+                <div class="model-cite">Wu et al., 2019 <a href="#ref11" class="cite">[11]</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain Gap Warning -->
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div>
+            <strong>Domain Gap Issue:</strong> All reviewed models are pre-trained on non-UAV (ground-level)
+            datasets. When applied to aerial imagery, they face a significant domain shift that degrades
+            detection accuracy, especially for small or densely packed objects.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOLUTIONS section -->
+    <section class="section" id="solutions">
+      <div class="section-inner">
+        <div class="section-label">Analysis</div>
+        <h2 class="section-title">Challenges &amp; Potential Solutions</h2>
+        <div class="solutions-grid">
+
+          <div class="solution-card">
+            <div class="sol-problem">
+              <span class="sol-label problem-label">Challenge</span>
+              <p>Manual annotation is precise but impractical at scale — time-consuming and expensive.</p>
+            </div>
+            <div class="sol-arrow">→</div>
+            <div class="sol-solution">
+              <span class="sol-label solution-label">Direction</span>
+              <p>Semi-automatic pipelines combining human-in-the-loop review with automated pre-labeling.</p>
+            </div>
+          </div>
+
+          <div class="solution-card">
+            <div class="sol-problem">
+              <span class="sol-label problem-label">Challenge</span>
+              <p>Models trained on ground-level images fail to generalize to eagle-eye perspectives.</p>
+            </div>
+            <div class="sol-arrow">→</div>
+            <div class="sol-solution">
+              <span class="sol-label solution-label">Direction</span>
+              <p>Domain adaptation &amp; fine-tuning on aerial-specific datasets like VisDrone or UAVDT.</p>
+            </div>
+          </div>
+
+          <div class="solution-card">
+            <div class="sol-problem">
+              <span class="sol-label problem-label">Challenge</span>
+              <p>Small object detection suffers at altitude due to limited pixel representation.</p>
+            </div>
+            <div class="sol-arrow">→</div>
+            <div class="sol-solution">
+              <span class="sol-label solution-label">Direction</span>
+              <p>Super-resolution preprocessing and feature pyramid networks (FPN) for multi-scale detection.</p>
+            </div>
+          </div>
+
+          <div class="solution-card">
+            <div class="sol-problem">
+              <span class="sol-label problem-label">Challenge</span>
+              <p>Cluttered and complex backgrounds cause high false-positive rates.</p>
+            </div>
+            <div class="sol-arrow">→</div>
+            <div class="sol-solution">
+              <span class="sol-label solution-label">Direction</span>
+              <p>Context-aware detection architectures and background-aware attention mechanisms.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FUTURE DIRECTION -->
+    <section class="section" id="future">
+      <div class="section-inner">
+        <div class="section-label">Section 09</div>
+        <h2 class="section-title">Future Direction</h2>
+        <p class="section-intro">
+          Several directions are planned to improve auto-labeling performance on UAV imagery.
+        </p>
+
+        <div class="future-grid">
+
+          <div class="future-card future-primary">
+            <div class="future-icon">🔄</div>
+            <h3>Incremental Dataset Training</h3>
+            <p>
+              Rather than training on the full dataset at once, the strategy is to train the model
+              in sequential 10% portions. Each portion produces a checkpoint (<code>.pth</code>)
+              that is fed into the next training stage, building a progressively refined model.
+            </p>
+            <div class="incremental-diagram">
+              <div class="inc-step">
+                <span class="inc-label">10%<br>Subset</span>
+              </div>
+              <div class="inc-arrow">→</div>
+              <div class="inc-step">
+                <span class="inc-label">Train<br>Model</span>
+              </div>
+              <div class="inc-arrow">→</div>
+              <div class="inc-step inc-highlight">
+                <span class="inc-label">Checkpoint<br>(.pth)</span>
+              </div>
+              <div class="inc-arrow">→</div>
+              <div class="inc-step">
+                <span class="inc-label">Updated<br>Model</span>
+              </div>
+              <div class="inc-arrow">↺</div>
+            </div>
+            <p class="future-note">Repeat across all dataset portions until the full dataset has been used.</p>
+          </div>
+
+          <div class="future-side">
+            <div class="future-card">
+              <div class="future-icon">🎯</div>
+              <h3>UAV-Specific Fine-Tuning</h3>
+              <p>Fine-tune models on UAV-like datasets (e.g., VisDrone, UAVDT) to close the domain gap between ground-level pre-training and aerial imagery.</p>
+            </div>
+            <div class="future-card">
+              <div class="future-icon">⚖️</div>
+              <h3>Address Class Imbalance</h3>
+              <p>Balancing strategies such as oversampling minority classes or weighted loss functions can improve per-class detection performance.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="limitations-block">
+          <div class="section-label" style="margin-bottom:0.75rem;">Limitations</div>
+          <div class="limitations-grid">
+            <div class="limitation-item">
+              <span class="lim-icon">⚠️</span>
+              <div>
+                <strong>Pre-training Domain Mismatch</strong>
+                <p>All evaluated models are pre-trained on COCO or non-UAV datasets. This causes a significant domain shift when applied to overhead UAV imagery.</p>
+              </div>
+            </div>
+            <div class="limitation-item">
+              <span class="lim-icon">🏷️</span>
+              <div>
+                <strong>Manual Ground-Truth Annotation</strong>
+                <p>Manual annotation introduces human error and limits scalability for larger datasets.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section class="section section-alt" id="conclusion">
+      <div class="section-inner">
+        <div class="section-label">Conclusion</div>
+        <h2 class="section-title">Summary &amp; Outlook</h2>
+        <div class="conclusion-card">
+          <p>
+            UAV imagery presents unique challenges that make accurate object detection and labeling difficult.
+            The <strong>eagle-eye view</strong>, <strong>cluttered and complex backgrounds</strong>, and
+            <strong>high altitude</strong> create obstacles that traditional computer vision approaches
+            struggle to overcome.
+          </p>
+          <p>
+            Manual labeling, while accurate, is extremely time-consuming and expensive. Meanwhile, existing
+            automated models — mostly trained on ground-level images — struggle to generalize on UAV imagery,
+            especially when it comes to spotting small objects.
+          </p>
+          <div class="conclusion-points">
+            <div class="cp-item">
+              <span class="cp-check">✓</span>
+              UAV datasets are distinct and require domain-specific training approaches
+            </div>
+            <div class="cp-item">
+              <span class="cp-check">✓</span>
+              Transformer-based models show promise but require aerial fine-tuning
+            </div>
+            <div class="cp-item">
+              <span class="cp-check">✓</span>
+              Semi-automatic labeling pipelines are key to scalable annotation
+            </div>
+            <div class="cp-item">
+              <span class="cp-check">✓</span>
+              Small object detection remains an open research challenge
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REFERENCES -->
+    <section class="section" id="references">
+      <div class="section-inner">
+        <div class="section-label">Bibliography</div>
+        <h2 class="section-title">References</h2>
+
+        <div class="ref-group">
+          <h3 class="ref-group-title">📁 Cited in Proposal</h3>
+          <ol class="ref-list">
+            <li id="ref1">
+              D. Du, Y. Qi, H. Yu, et al., "The Unmanned Aerial Vehicle Benchmark: Object Detection and Tracking,"
+              <em>arXiv:1804.00518</em>, 2018.
+            </li>
+            <li id="ref2">
+              J. Wang, W. Yang, H. Guo, R. Zhang, G.-S. Xia, "Tiny Object Detection in Aerial Images,"
+              <em>ICPR 2021</em>, pp. 3791–3798. doi: 10.1109/ICPR48806.2021.9413340.
+            </li>
+            <li id="ref3">
+              P. Zhu, L. Wen, X. Bian, H. Ling, Q. Hu, "Vision Meets Drones: A Challenge,"
+              <em>arXiv:1804.07437</em>, 2018.
+            </li>
+            <li id="ref4">
+              K. Li, G. Wan, G. Cheng, "DIOR," <em>IEEE Dataport</em>, 2025. doi: 10.21227/tq1e-nx82.
+            </li>
+            <li id="ref5">
+              S. M. Azimi, R. Bahmanyar, C. Henry, F. Kurz, "EAGLE: Large-scale Vehicle Detection Dataset
+              in Real-World Scenarios using Aerial Imagery," <em>arXiv:2007.06124</em>, 2020.
+            </li>
+            <li id="ref6">
+              T. Ren et al., "Grounded SAM: Assembling Open-World Models for Diverse Visual Tasks,"
+              <em>arXiv:2401.14159</em>, 2024.
+            </li>
+            <li id="ref7">
+              S. Liu et al., "Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection,"
+              <em>arXiv:2303.05499</em>, 2023.
+            </li>
+            <li id="ref8">
+              A. Kirillov et al., "Segment Anything," <em>ICCV 2023</em>, pp. 3992–4003.
+            </li>
+            <li id="ref9">
+              G. Jocher, J. Qiu, "Ultralytics YOLO11," v11.0.0, 2024.
+            </li>
+            <li id="ref10">
+              N. Carion, F. Massa, G. Synnaeve, et al., "End-to-End Object Detection with Transformers,"
+              <em>arXiv:2005.12872</em>, 2020.
+            </li>
+            <li id="ref11">
+              Y. Wu, A. Kirillov, F. Massa, W.-Y. Lo, R. Girshick, "Detectron2," 2019.
+            </li>
+            <li id="ref12">
+              P. Zhu et al., "Detection and Tracking Meet Drones Challenge," <em>arXiv:2001.06303</em>, 2021.
+            </li>
+          </ol>
+        </div>
+
+        <div class="ref-group extended">
+          <h3 class="ref-group-title">📚 Additional Related References</h3>
+          <ol class="ref-list ref-list-extended" start="13">
+            <li>
+              Z. Cao, H. Wang, W. Li, Z. Zheng, H. Liu, "D2-Det: Towards High Quality Object Detection and
+              Instance Segmentation for UAV Imagery," <em>Remote Sensing</em>, vol. 13, no. 4, 2021.
+              doi: 10.3390/rs13040666.
+            </li>
+            <li>
+              S. Hsieh, L. Lin, "Drone-Based Object Counting by Spatially Regularized Regional Proposal
+              Network," <em>ICCV 2017</em>, pp. 4145–4153.
+            </li>
+            <li>
+              K. Chen, J. Wang, J. Pang, et al., "MMDetection: Open MMLab Detection Toolbox and Benchmark,"
+              <em>arXiv:1906.07155</em>, 2019.
+            </li>
+            <li>
+              X. Yang, J. Yang, J. Yan, et al., "SCRDet: Towards More Robust Detection for Small,
+              Cluttered and Rotated Objects," <em>ICCV 2019</em>, pp. 8232–8241.
+            </li>
+            <li>
+              N. Carion, F. Massa, G. Synnaeve, N. Usunier, "DETR for Pedestrian Detection,"
+              <em>ECCV Workshop</em>, 2020.
+            </li>
+            <li>
+              T.-Y. Lin, P. Dollár, R. Girshick, K. He, et al., "Feature Pyramid Networks for Object Detection,"
+              <em>CVPR 2017</em>, pp. 2117–2125.
+            </li>
+            <li>
+              W. Liu, D. Anguelov, D. Erhan, et al., "SSD: Single Shot MultiBox Detector,"
+              <em>ECCV 2016</em>, pp. 21–37.
+            </li>
+            <li>
+              M. Everingham, L. Van Gool, C. K. I. Williams, et al., "The PASCAL Visual Object Classes
+              (VOC) Challenge," <em>IJCV</em>, vol. 88, pp. 303–338, 2010.
+            </li>
+            <li>
+              S. Razakarivony, F. Jurie, "Vehicle Detection in Aerial Imagery: A Small Target Detection
+              Benchmark," <em>Journal of Visual Communication and Image Representation</em>, vol. 34, 2016.
+            </li>
+            <li>
+              Y. Bai, Y. Zhang, M. Ding, B. Ghanem, "SOD-MTGAN: Small Object Detection via Multi-Task
+              Generative Adversarial Network," <em>ECCV 2018</em>.
+            </li>
+            <li>
+              Z. Zheng, M. Zhong, J. Wang, Y. Gu, X. Zhang, "HyperLi-Net: A Hyper-Light Deep Learning
+              Network for High-Accurate and High-Speed Ship Detection from SAR Images,"
+              <em>ISPRS Journal</em>, vol. 167, pp. 123–153, 2020.
+            </li>
+            <li>
+              A. Dosovitskiy, L. Beyer, A. Kolesnikov, et al., "An Image is Worth 16x16 Words: Transformers
+              for Image Recognition at Scale," <em>ICLR 2021</em>. arXiv:2010.11929.
+            </li>
+            <li>
+              J. Redmon, A. Farhadi, "YOLOv3: An Incremental Improvement,"
+              <em>arXiv:1804.02767</em>, 2018.
+            </li>
+            <li>
+              H. Caesar, V. Bankiti, A. H. Lang, et al., "nuScenes: A Multimodal Dataset for Autonomous
+              Driving," <em>CVPR 2020</em>, pp. 11621–11631.
+            </li>
+            <li>
+              T. Lin, M. Maire, S. Belongie, et al., "Microsoft COCO: Common Objects in Context,"
+              <em>ECCV 2014</em>, pp. 740–755.
+            </li>
+            <li>
+              P. Zhu, L. Wen, D. Du, et al., "VisDrone-DET2019: The Vision Meets Drones Object Detection
+              Challenge Results," <em>ICCV Workshop</em>, 2019.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── FOOTER ─────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <strong>UAV Imagery Labeling: Solutions and Challenges</strong>
+        <span>Seminar Proposal &mdash; Kuwait University, Dept. of Computer Science</span>
+      </div>
+      <div class="footer-right">
+        <span>Abeer Alsafran &middot; Supervised by Dr. Noura Aljeri &middot; March 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/main.js"></script>
+</body>
+</html>
